@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <br><div class="container">
+    <a class="btn btn-primary" href="{% url 'cause_2_2' %}" style="z-index: 1; float: left; position: relative">
+      Previous
+    </a>
+    <a  class="btn btn-primary" href="{% url 'cause_2_4' %}" style="z-index: 1; float: right; position: relative">
+      Next
+    </a>
+
+    <img src="{% static 'img/legal/Cause3_2022_04893_JC_Paper_2_4.jpg' %}" alt="Paper 1" style="width: 100%; height: 100%; z-index: 5">
+
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+  <script src="/static/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}

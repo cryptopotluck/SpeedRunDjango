@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+
+{% block content %}
+
+
+    <div class="container">
+
+    {{ listed_out_defence.media }}
+    {% for d in listed_out_defence %}
+        <br>
+        <div class="row">
+            <div class="col-md-12 card">
+                <center><h1>{{ d.name }}</h1></center>
+
+                <center><h3>Accusation</h3></center>
+
+                <br>
+                 <div class="container">
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            {{ d.rich_accusation | safe }}
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                 </div>
+                <br>
+
+                    <center><h3>Defense</h3></center>
+
+                    <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-1"></div>
+                            <div class="col-10">
+                                {{ d.rich_defence | safe }}
+                            </div>
+                        <div class="col-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+
+  <script src="/static/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}

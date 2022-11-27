@@ -39,8 +39,12 @@ SECRET_KEY = 'django-insecure-obl=54d*huc%ll&c&v@7s=6g&c*&9paewcoe!scl7idah+_@o)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", '127.0.0.1']
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", '127.0.0.1', '192.168.1.35']
 
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["localhost", "0.0.0.0", '127.0.0.1', "10.0.2.2"]
 
 # Application definition
 
@@ -51,8 +55,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Internal apps
     'home.apps.HomeConfig',
+    'osrsMonsterDatabase.apps.OsrsmonsterdatabaseConfig',
+
+    # Outside apps
+    'qrcode',
+    'django_summernote',
+    'osrsbox',
+    'osrs_api',
+    'debug_toolbar',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
 ]
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,6 +85,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
 ]
 
 ROOT_URLCONF = 'SpeedRunDjango.urls'
@@ -79,12 +104,22 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
+            'libraries': {
+                'pagination_limit': 'osrsMonsterDatabase.templatetags.pagination_limit',
+
+            }
         },
     },
 ]
 
 WSGI_APPLICATION = 'SpeedRunDjango.wsgi.application'
 
+INTERNAL_IPS = [
+    "localhost",
+    "0.0.0.0",
+    '127.0.0.1'
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -101,6 +136,15 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 #         'HOST': 'localhost'
 #     }
 # }
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -120,6 +164,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '1006858553666-q8c0oolskmimickm8buhnqohdgt5b8tk.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -149,8 +205,8 @@ STATICFILES_DIRS = [
 ]
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
